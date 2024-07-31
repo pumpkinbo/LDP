@@ -17,6 +17,7 @@ class OUE(LDPProtocol):
     def load_data(self, file_path):
         dataframe = pd.read_excel(file_path)
         self.domain = np.sort(dataframe['Word'].dropna().unique())
+        self.d = len(self.domain)
         return dataframe
 
     def encode(self, raw_item):
