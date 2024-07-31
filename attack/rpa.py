@@ -22,13 +22,13 @@ class RPA():
     def generate_fake_perturbed_val(self, file_path):
         df = self.protocol.load_data(file_path)
         if isinstance(self.protocol, OUE):
-            return [random.choice([0,1]) for _ in range(len(self.domain))]
+            return [random.choice([0,1]) for _ in range(len(self.protocol.domain))]
         elif isinstance(self.protocol, KRR):
             return random.choice(self.protocol.domain)
         elif isinstance(self.protocol, OLH):
             random_hash = random.choice(self.protocol.domain)   # randomly select a seed
             random_val = random.choice(self.protocol.domain_dot)
-            return (random_hash, random_val)
+            return dict(hash_func=random_hash, hash_val=random_val)
         else:
             raise ValueError("Unsupported LDP protocol")
 
