@@ -51,6 +51,7 @@ class RPA():
         return original_fre, attack_fre
 
     def save_res(self, original_fre, attacked_fre):
+        results = []
         if isinstance(original_fre, list) and isinstance(attacked_fre, list):  # OUE
             gain = [a - b for a, b in zip(original_fre,attacked_fre)]   # frequency gain
             results = list(zip(self.protocol.domain, original_fre, attacked_fre, gain))
