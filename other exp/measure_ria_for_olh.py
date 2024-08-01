@@ -20,7 +20,7 @@ def obtain_prac_val(file_path):
     practical_G = df['overall gain'][0]
     return practical_G
 
-file = r'D:\LDP\result\frequency gains and overall gain of RIA for OLH.xlsx'
+file = r'/result/frequency gains and overall gain of RIA for OLH.xlsx'
 dataset = ['Zipf']
 theoretical_value = cal_theo_val()
 practical_value = obtain_prac_val(file)
@@ -42,4 +42,4 @@ ax.set_xticklabels(dataset)
 ax.legend()
 
 plt.show()
-fig.savefig(r'D:\LDP\theoretical vs. practical (RIA on OLH).png')
+fig.savefig(r'D:\LDP\other exp\theoretical vs. practical (RIA on OLH).png')
