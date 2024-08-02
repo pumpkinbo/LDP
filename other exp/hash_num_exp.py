@@ -25,7 +25,7 @@ def run_exp(file_path):
     for i in hash_func_counts:
         protocol = OLH(epsilon=1)
         mga = MGA(protocol=protocol, num_hash_funcs=i)
-        _, overall_gain = mga.run_mga(file_path)
+        _, overall_gain, _, _ = mga.run_mga(file_path)
         overall_gains.append(overall_gain)
 
     return hash_func_counts, overall_gains
@@ -42,7 +42,6 @@ def plot_results(hash_func_counts, overall_gains, theoretical_gains):
     plt.grid(True, which='both', linestyle='--', linewidth=0.5)
     plt.title('Impact of Number of Hash Functions on Overall Gain in MGA')
     plt.show()
-    plt.savefig(r'D:\LDP\other exp\G vs number of hash functions.png')
 
 if __name__ == "__main__":
     file_path = r'D:\LDP\data\small_synthetic_dataset.xlsx'
