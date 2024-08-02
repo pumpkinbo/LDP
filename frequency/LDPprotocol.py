@@ -13,6 +13,8 @@ class LDPProtocol(ABC):
     def __init__(self, epsilon):
         self.epsilon = epsilon
         self.domain = None
+        self.p = None
+        self.q = None
 
     @abstractmethod
     def load_data(self, file_path):
