@@ -29,12 +29,9 @@ class MGA():
         self.target_items = []
         self.num_hash_funcs = num_hash_funcs    # number of sampled hash functions for OLH
 
-        # 在防御类中需要拿到攻击前所有项的估计频率，攻击后所有项的频率（归一化），探测假用户手段中需要拿到加入fake users后的perturbed_vals
-        # 但是又不想改run函数中的返回值了，所以将这些值作为attributes
-        self.original_fre = None
-        self.combined_perturbed_vals = None
-        self.attacked_fre = None
-
+        # self.original_fre = None
+        # self.combined_perturbed_vals = None
+        # self.attacked_fre = None
 
     def select_target_items(self):
         self.target_items = random.sample(list(self.protocol.domain), self.r)
@@ -42,7 +39,6 @@ class MGA():
     def craft_perturbed_value(self):
         """
         craft perturbed value for a fake user according to specific LDP protocol
-        :param file_path: dataset
         :return: a perturbed_value, an item, a binary vector or (hash_func, hash_val)
         """
         if isinstance(self.protocol, OUE):
@@ -90,31 +86,32 @@ class MGA():
 
         genuine_user_perturbed_values = [self.protocol.perturb(self.protocol.encode(r)) for r in df['Word']]
         self.select_target_items()
-        self.original_fre = self.cal_frequencies(genuine_user_perturbed_values)
+        original_fre = self.cal_frequencies(genuine_user_perturbed_values)
 
-        num_fake_users = int(n * self.beta)
+        num_fake_users = math.ceil(n * (self.beta / (1 - self.beta)))
         fake_perturbed_values = self.generate_fake_users(num_fake_users)
 
-        self.combined_perturbed_vals = genuine_user_perturbed_values + fake_perturbed_values
-        self.attacked_fre = self.cal_frequencies(self.combined_perturbed_vals)
+        combined_perturbed_vals = genuine_user_perturbed_values + fake_perturbed_values
+        attacked_fre = self.cal_frequencies(combined_perturbed_vals)
 
         # convert frequencies to dictionaries
-        if isinstance(self.original_fre, list):
-            original_fre_dic = dict(zip(self.protocol.domain, self.original_fre))
-            attacked_fre_dic = dict(zip(self.protocol.domain, self.attacked_fre))
-        elif isinstance(self.original_fre, Counter):
-            original_fre_dic = dict(self.original_fre)
-            attacked_fre_dic = dict(self.attacked_fre)
-        elif isinstance(self.original_fre, dict):
-            original_fre_dic = self.original_fre
-            attacked_fre_dic = self.attacked_fre
+        if isinstance(original_fre, list):
+            original_fre_dic = dict(zip(self.protocol.domain, original_fre))
+            attacked_fre_dic = dict(zip(self.protocol.domain, attacked_fre))
+        elif isinstance(original_fre, Counter):
+            original_fre_dic = dict(original_fre)
+            attacked_fre_dic = dict(attacked_fre)
+        elif isinstance(original_fre, dict):
+            original_fre_dic = original_fre
+            attacked_fre_dic = attacked_fre
         else:
              raise ValueError("Unsupported aggregate result type")
 
         frequency_gains = {item: attacked_fre_dic.get(item,0) - original_fre_dic.get(item,0) for item in self.target_items}
         overall_gain = sum(frequency_gains.values())
 
-        return frequency_gains, overall_gain
+        return frequency_gains, overall_gain, original_fre_dic, attacked_fre_dic, combined_perturbed_vals
+
 
 if __name__ == "__main__":
     protocol = OLH(epsilon=1)
@@ -122,7 +119,7 @@ if __name__ == "__main__":
     # protocol = OUE()
 
     mga = MGA(protocol=protocol)
-    frequency_gains, overall_gain = mga.run_mga('D:\LDP\data\small_synthetic_dataset.xlsx')
+    frequency_gains, overall_gain, _, _, _ = mga.run_mga(r'D:\LDP\data\small_synthetic_dataset.xlsx')
 
     output_file_path = r'D:\LDP\result\frequency gains and overall gain of MGA for OLH (small dataset).xlsx'
     df_gains = pd.DataFrame(list(frequency_gains.items()), columns=['target item', 'frequency gain'])
