@@ -25,7 +25,7 @@ def run_exp(file_path):
     for i in hash_func_counts:
         protocol = OLH(epsilon=1)
         mga = MGA(protocol=protocol, num_hash_funcs=i)
-        _, overall_gain, _, _ = mga.run_mga(file_path)
+        _, overall_gain, _, _, _ = mga.run_mga(file_path)
         overall_gains.append(overall_gain)
 
     return hash_func_counts, overall_gains
