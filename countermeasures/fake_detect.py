@@ -15,7 +15,7 @@ from mlxtend.frequent_patterns import fpgrowth
 
 # 探测异常的扰动值（假用户），将异常的扰动值剔除后执行aggregate
 
-class fake_detect(DefenseMethod):
+class FakeDetect():
     def __init__(self, protocol :LDPProtocol):
         self.protocol = protocol
 
@@ -31,7 +31,13 @@ class fake_detect(DefenseMethod):
         frequent_itemsets = fpgrowth(df, min_support=min_support, use_colnames=True)
         frequent_itemsets['support_count'] = frequent_itemsets['support'] * len(perturbed_values)
 
-        return frequent_itemsets
+        # index should begin from 1
+        # frequent_itemsets['itemsets'] = frequent_itemsets['itemsets'].apply(lambda x: {i+1 for i in x})
+
+        # return frequent_itemsets
+        # select the longest itemsets (avoid unnecessary computation)
+        max_length = frequent_itemsets['itemsets'].apply(len).max()
+        return frequent_itemsets[frequent_itemsets['itemsets'].apply(len) == max_length]
 
     def detect_fake_users(self, perturbed_values, frequent_itemsets):
         """
@@ -47,7 +53,7 @@ class fake_detect(DefenseMethod):
             itemset = row['itemsets']
             z = len(itemset)
             support_count = row['support_count']
-            tau_z = math.floor(num_users * self.protocol.p * (self.protocol.q**(z-1)))
+            tau_z = math.ceil(num_users * self.protocol.p * (self.protocol.q**(z-1)))
             if support_count >= tau_z:
                 for idx, vector in enumerate(perturbed_values):
                     if all(vector[i] == 1 for i in itemset):
