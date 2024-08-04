@@ -59,7 +59,7 @@ According to the above table, files in `theoretical analysis` show the impact of
 |  parameters  |         significance         |
 | :----------: | :--------------------------: |
 |  $$\beta$$   |   Proportion of fake users   |
-|    $$r$$     |  The number of target items  |
+|    $r$     |  The number of target items  |
 |   $$f_T$$    | Target items' true frequency |
 | $$\epsilon$$ |        Privacy budget        |
 |    $$d$$     |        Size of domain        |
@@ -68,15 +68,15 @@ Results:
 
 - kRR:
 
-![G and normalized G of kRR](D:\LDP\result\G and normalized G of kRR.png)
+![G and normalized G of kRR]([D:\LDP\result\G and normalized G of kRR.png](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20normalized%20G%20of%20kRR.png))
 
 - OUE:
 
-![G and Normalized G of OUE](D:\LDP\result\G and Normalized G of OUE.png)
+![]([D:\LDP\result\G and Normalized G of OUE.png](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OUE.png))
 
 - OLH:
 
-![G and Normalized G of OLH](D:\LDP\result\G and Normalized G of OLH.png)
+![]([D:\LDP\result\G and Normalized G of OLH.png](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OLH.png))
 
 ## Defense
 
