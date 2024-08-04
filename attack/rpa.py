@@ -6,21 +6,20 @@
 
 import pandas as pd
 import numpy as np
+import math
 import random
 from frequency.LDPprotocol import LDPProtocol
 from frequency.oue_v2 import OUE
 from frequency.olh import OLH
 from frequency.krr import KRR
 from collections import Counter
+from Attack import Attack
 
-class RPA():
-    def __init__(self, protocol : LDPProtocol, beta=0.05):
-        self.protocol = protocol
-        self.fake_perturbed_values = []
-        self.beta = beta
-
-    def generate_fake_perturbed_val(self, file_path):
-        df = self.protocol.load_data(file_path)
+class RPA(Attack):
+    def __init__(self, protocol : LDPProtocol, r=10, beta=0.05):
+        super().__init__(protocol, r, beta)
+    
+    def generate_fake_perturbed_val(self):
         if isinstance(self.protocol, OUE):
             return [random.choice([0,1]) for _ in range(len(self.protocol.domain))]
         elif isinstance(self.protocol, KRR):
@@ -32,47 +31,48 @@ class RPA():
         else:
             raise ValueError("Unsupported LDP protocol")
 
+    def generate_fake_users(self, num_fake_users):
+        fake_perturbed_values = []
+        for _ in range(num_fake_users):
+            fake_perturbed_values.append(self.generate_fake_perturbed_val())
+        return fake_perturbed_values
+
     def run_rpa(self, file_path):
         df = self.protocol.load_data(file_path)
         n = df['Word'].count()
-        num_fake_users = int(n * self.beta)
 
-        # calculate the original frequencies before RPA
-        original_fre = self.protocol.aggregate([self.protocol.perturb(self.protocol.encode(r)) for r in df['Word']])
+        genuine_ueser_perturbed_values = [self.protocol.perturb(self.protocol.encode(r)) for r in df['Word']]
+        self.select_target_items()
+        original_fre = self.cal_frequencies(genuine_ueser_perturbed_values)
 
-        # generate fake perturbed values for all fake users
-        for _ in range(num_fake_users):
-            self.fake_perturbed_values.append(self.generate_fake_perturbed_val(file_path))
+        num_fake_users = math.ceil(n * (self.beta / (1 - self.beta)))
+        fake_perturbed_values = self.generate_fake_users(num_fake_users)
 
-        # aggregate original data with fake perturbed values
-        combined_perturbed_values = [self.protocol.perturb(self.protocol.encode(r)) for r in df['Word']] + self.fake_perturbed_values
-        attack_fre = self.protocol.aggregate(combined_perturbed_values)
+        combined_perturbed_values = genuine_ueser_perturbed_values + fake_perturbed_values
+        attacked_fre = self.cal_frequencies(combined_perturbed_values)
 
-        return original_fre, attack_fre
+        if isinstance(original_fre, list):
+            original_fre_dic = dict(zip(self.protocol.domain, original_fre))
+            attacked_fre_dic = dict(zip(self.protocol.domain, attacked_fre))
+        elif isinstance(original_fre, Counter):
+            original_fre_dic = dict(original_fre)
+            attacked_fre_dic = dict(attacked_fre)
+        elif isinstance(original_fre, dict):
+            original_fre_dic = original_fre
+            attacked_fre_dic = attacked_fre
+        else:
+             raise ValueError("Unsupported aggregate result type")
 
-    def save_res(self, original_fre, attacked_fre):
-        results = []
-        if isinstance(original_fre, list) and isinstance(attacked_fre, list):  # OUE
-            gain = [a - b for a, b in zip(original_fre,attacked_fre)]   # frequency gain
-            results = list(zip(self.protocol.domain, original_fre, attacked_fre, gain))
-        elif isinstance(original_fre, Counter) and isinstance(attacked_fre, Counter): # kRR
-            results = [(i, original_fre.get(i,0), attacked_fre.get(i,0), attacked_fre.get(i,0) - original_fre.get(i,0)) for i in self.protocol.domain]
-        elif isinstance(original_fre, dict) and isinstance(attacked_fre, dict):     # OLH
-            results = [(i, original_fre.get(i,0), attacked_fre.get(i,0), attacked_fre.get(i,0) - original_fre.get(i,0)) for i in self.protocol.domain]
+        frequency_gains = {item: attacked_fre_dic.get(item,0) - original_fre_dic.get(item,0) for item in self.target_items}
+        overall_gain = sum(frequency_gains.values())
 
-        # convert to dataframe
-        df = pd.DataFrame(results, columns=['Word', 'Original Frequency', 'Attacked Frequency', 'Frequency Gain'])
+        return overall_gain, original_fre_dic, attacked_fre_dic
 
-        df_fake_perturbed_vals = pd.DataFrame(self.fake_perturbed_values, columns=['Fake Perturbed Value'])
-        df = pd.concat([df, df_fake_perturbed_vals], axis=1)
-
-        # write
-        output_file_path = r'D:\LDP\result\frequency gains of RPA for OUE.xlsx'
-        df.to_excel(output_file_path, index=False)
-        print(f"Results written to {output_file_path}")
 
 if __name__ == "__main__":
-    protocol = OUE()
+    # protocol = OUE(epsilon=1)
+    # protocol = KRR(epsilon=1)
+    protocol = OLH(epsilon=1)
     rpa = RPA(protocol=protocol)
-    original_fre, attacked_fre = rpa.run_rpa('D:\LDP\data\synthetic_dataset.xlsx')
-    rpa.save_res(original_fre, attacked_fre)
+    overall_gain, _, _ = rpa.run_rpa('D:\LDP\data\small_synthetic_dataset.xlsx')
+    print(overall_gain)
