@@ -20,8 +20,9 @@ The code implementation includes:
 The `data` folder contains synthetic dataset and real-word datasets. Currently the experiments have been performed on the Zipf dataset.
 
 - **Zipf**: The `data/syn_dataset_gen.py` generates a number of values that follow the zipf distribution.
-  - `data/synthetic_dataset.xlsx`: $1000000$ users and $1024$ items.
-  - `data/tiny_synthetic_dataset.xlsx`: $1000$ users and $128$ items.
+  - `data/synthetic_dataset.xlsx`: 1000000 users and 1024 items.
+  - `small_synthetic_dataset.xlsx`: 100000 users and 128 items.
+  - `data/tiny_synthetic_dataset.xlsx`: 1000 users and 50 items.
 - **Fire**: `Fire_Department_and_Emergency_Medical_Services_Dispatched_Calls_for_Service_20240726.csv`. http://bit.ly/336sddL.
 
 ## Environment
@@ -35,5 +36,74 @@ The `data` folder contains synthetic dataset and real-word datasets. Currently t
 
 The `frequency` includes three LDP protocols for the task of frequency estimation. `frequency/LDPprotocol.py` defines base class `LDPProtocol`, which contains *load_data*, *encode*, *perturb*, *aggregate* method. Using inheritance and polymorphism, `krr.py`,`oue_v2.py` and `olh.py`  implement the kRR, OUE and OLH protocol, respectively. All these programs runs on the  `synthetic_dataset.xlsx`. Running these three files can obtain the ***count/ frequency estimation result*** in `result`. 
 
+## Attacks
+
+The `attack`folder contains three poisoning attacks on LDP protocols: `rpa.py`, `ria.py` and `mga_v2.py` (`mga_v2.py` is the refactor of `mga.py`). Running these programs on `small_synthetic_dataset.xlsx` ($$\beta=0.05, r=10, \epsilon=1$$), we can obtain the overall gain ($$G$$) of different attacks for different LDP protocols. (The results were averaged over 8 experiments.)
+
+Results:
+
+|      |  kRR   |  OUE   |  OLH   |
+| :--: | :----: | :----: | :----: |
+| RIA  | 0.0418 | 0.0528 | 0.0599 |
+| RPA  |  6e-5  | 0.4946 |  9e-3  |
+| MGA  | 3.4813 | 1.5761 | 1.0277 |
+
+
+
 ## Theoretical Analysis
 
+![image-20240804100936509](C:\Users\admin\AppData\Roaming\Typora\typora-user-images\image-20240804100936509.png)
+
+According to the above table, files in `theoretical analysis` show the impact of different parameters on the overall gains and normalized overall gains.
+
+|  parameters  |         significance         |
+| :----------: | :--------------------------: |
+|  $$\beta$$   |   Proportion of fake users   |
+|    $$r$$     |  The number of target items  |
+|   $$f_T$$    | Target items' true frequency |
+| $$\epsilon$$ |        Privacy budget        |
+|    $$d$$     |        Size of domain        |
+
+Results:
+
+- kRR:
+
+![G and normalized G of kRR](D:\LDP\result\G and normalized G of kRR.png)
+
+- OUE:
+
+![G and Normalized G of OUE](D:\LDP\result\G and Normalized G of OUE.png)
+
+- OLH:
+
+![G and Normalized G of OLH](D:\LDP\result\G and Normalized G of OLH.png)
+
+## Defense
+
+The `fake_detect.py` and `norm.py` in `countermeasures` implement two methods of defense against poisoning attacks: **normalization** and **detection of fake users**. `both.py` uses these methods together. Specifically, the central server can first detect and remove the fake users, and then perform normalization. Run these programs on `tiny_synthetic_dataset.xlsx`.
+
+Results:
+
+- Impact of $$\beta$$ on MGA ($$r=10, \epsilon=1$$):
+  - OUE:
+
+![G vs beta (Countermeasures against MGA for OUE)](D:\LDP\result\G vs beta (Countermeasures against MGA for OUE).png)
+
+- Impact of $$r$$​ on MGA ($$\beta=0.05, \epsilon=1$$):
+  - OUE:
+
+![G vs r (countermeasures against MGA for OUE)](D:\LDP\result\G vs r (countermeasures against MGA for OUE).png)
+
+## Others
+
+The theoretical overall gain of RIA for OLH is derived based on the “perfect” hashing assumption, i.e., an item is hashed to a value in the hash domain $$[d']$$ uniformly at random. Practical hash functions may not satisfy this assumption. Therefore, the theoretical overall gain of RIA for OLH may be inaccurate in practice. `other exp/measure_ria_for_olh.py` use xxhash as hash functions to evaluate the gaps between the theoretical and practical overall gains (running on `synthetic_dataset.xlsx`). 
+
+Result:
+
+![theoretical vs. practical (RIA on OLH)](D:\LDP\other exp\theoretical vs. practical (RIA on OLH).png)
+
+The theoretical overall gain of MGA for OLH is derived based on the assumption that the attacker can find a hash function that hashes all target items to the same value. In practice, we may not be able to find such hash functions within a given amount of time. Therefore, for each fake user, we randomly sample some xxhash hash functions and use the one that hashes the most target items to the same value. Run `hash_num_exp.py` on `small_synthetic_dataset.xlsx`.
+
+Results:
+
+![G vs number of hash functions（small dataset）](C:\Users\admin\Desktop\G vs number of hash functions（small dataset）.png)
