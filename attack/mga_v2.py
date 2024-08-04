@@ -19,22 +19,17 @@ from frequency.LDPprotocol import LDPProtocol
 from frequency.krr import KRR
 from frequency.olh import OLH
 from frequency.oue_v2 import OUE
+from Attack import Attack
 
 
-class MGA():
-    def __init__(self, protocol : LDPProtocol, r=5, beta=0.05, num_hash_funcs=100):
-        self.protocol = protocol
-        self.beta = beta
-        self.r = r      # number of target items
-        self.target_items = []
+class MGA(Attack):
+    def __init__(self, protocol : LDPProtocol, r=10, beta=0.05, num_hash_funcs=100):
+        super().__init__(protocol, r, beta)
         self.num_hash_funcs = num_hash_funcs    # number of sampled hash functions for OLH
 
         # self.original_fre = None
         # self.combined_perturbed_vals = None
         # self.attacked_fre = None
-
-    def select_target_items(self):
-        self.target_items = random.sample(list(self.protocol.domain), self.r)
 
     def craft_perturbed_value(self):
         """
@@ -76,10 +71,6 @@ class MGA():
             fake_perturbed_values.append(self.craft_perturbed_value())
         return fake_perturbed_values
 
-    def cal_frequencies(self, perturbed_values):
-        return self.protocol.aggregate(perturbed_values)
-
-
     def run_mga(self, file_path):
         df = self.protocol.load_data(file_path)
         n = df['Word'].count()
@@ -115,14 +106,16 @@ class MGA():
 
 if __name__ == "__main__":
     protocol = OLH(epsilon=1)
-    # protocol = KRR()
-    # protocol = OUE()
+    # protocol = KRR(epsilon=1)
+    # protocol = OUE(epsilon=1)
 
     mga = MGA(protocol=protocol)
     frequency_gains, overall_gain, _, _, _ = mga.run_mga(r'D:\LDP\data\small_synthetic_dataset.xlsx')
 
-    output_file_path = r'D:\LDP\result\frequency gains and overall gain of MGA for OLH (small dataset).xlsx'
-    df_gains = pd.DataFrame(list(frequency_gains.items()), columns=['target item', 'frequency gain'])
-    df_overall = pd.DataFrame({'overall gain': [overall_gain]})
-    df_combined = pd.concat([df_gains, df_overall], axis=1)
-    df_combined.to_excel(output_file_path, index=False)
+    print(overall_gain)
+
+    # output_file_path = r'D:\LDP\result\frequency gains and overall gain of MGA for OLH (small dataset).xlsx'
+    # df_gains = pd.DataFrame(list(frequency_gains.items()), columns=['target item', 'frequency gain'])
+    # df_overall = pd.DataFrame({'overall gain': [overall_gain]})
+    # df_combined = pd.concat([df_gains, df_overall], axis=1)
+    # df_combined.to_excel(output_file_path, index=False)
