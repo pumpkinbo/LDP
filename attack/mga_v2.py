@@ -19,7 +19,7 @@ from frequency.LDPprotocol import LDPProtocol
 from frequency.krr import KRR
 from frequency.olh import OLH
 from frequency.oue_v2 import OUE
-from Attack import Attack
+from attack.Attack import Attack
 
 
 class MGA(Attack):
