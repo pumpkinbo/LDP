@@ -38,7 +38,7 @@ The `frequency` includes three LDP protocols for the task of frequency estimatio
 
 ## Attacks
 
-The `attack`folder contains three poisoning attacks on LDP protocols: `rpa.py`, `ria.py` and `mga_v2.py` (`mga_v2.py` is the refactor of `mga.py`). Running these programs on `small_synthetic_dataset.xlsx` ($$\beta=0.05, r=10, \epsilon=1$$), we can obtain the overall gain ($$G$$) of different attacks for different LDP protocols. (The results were averaged over 8 experiments.)
+The `attack`folder contains three poisoning attacks on LDP protocols: `rpa.py`, `ria.py` and `mga_v2.py` (`mga_v2.py` is the refactor of `mga.py`). Running these programs on `small_synthetic_dataset.xlsx` ($\beta=0.05, r=10, \epsilon=1$), we can obtain the overall gain ($G$) of different attacks for different LDP protocols. (The results were averaged over 8 experiments.)
 
 Results:
 
@@ -59,7 +59,7 @@ According to the above table, files in `theoretical analysis` show the impact of
 |  parameters  |         significance         |
 | :----------: | :--------------------------: |
 |  $$\beta$$   |   Proportion of fake users   |
-|    $$r$$     |  The number of target items  |
+|    $r$     |  The number of target items  |
 |   $$f_T$$    | Target items' true frequency |
 | $$\epsilon$$ |        Privacy budget        |
 |    $$d$$     |        Size of domain        |
@@ -68,15 +68,15 @@ Results:
 
 - kRR:
 
-![G and normalized G of kRR](D:\LDP\result\G and normalized G of kRR.png)
+![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20normalized%20G%20of%20kRR.png)
 
 - OUE:
 
-![G and Normalized G of OUE](D:\LDP\result\G and Normalized G of OUE.png)
+![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OUE.png)
 
 - OLH:
 
-![G and Normalized G of OLH](D:\LDP\result\G and Normalized G of OLH.png)
+![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OLH.png)
 
 ## Defense
 
@@ -87,12 +87,12 @@ Results:
 - Impact of $$\beta$$ on MGA ($$r=10, \epsilon=1$$):
   - OUE:
 
-![G vs beta (Countermeasures against MGA for OUE)](D:\LDP\result\G vs beta (Countermeasures against MGA for OUE).png)
+![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(Countermeasures%20against%20MGA%20for%20OUE).png))
 
 - Impact of $$r$$​ on MGA ($$\beta=0.05, \epsilon=1$$):
   - OUE:
 
-![G vs r (countermeasures against MGA for OUE)](D:\LDP\result\G vs r (countermeasures against MGA for OUE).png)
+![G vs r (countermeasures against MGA for OUE)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20r%20(countermeasures%20against%20MGA%20for%20OUE).png)
 
 ## Others
 
@@ -100,7 +100,7 @@ The theoretical overall gain of RIA for OLH is derived based on the “perfect�
 
 Result:
 
-![theoretical vs. practical (RIA on OLH)](D:\LDP\other exp\theoretical vs. practical (RIA on OLH).png)
+![theoretical vs. practical (RIA on OLH)](https://github.com/pumpkinbo/LDP/blob/master/other%20exp/theoretical%20vs.%20practical%20(RIA%20on%20OLH).png)
 
 The theoretical overall gain of MGA for OLH is derived based on the assumption that the attacker can find a hash function that hashes all target items to the same value. In practice, we may not be able to find such hash functions within a given amount of time. Therefore, for each fake user, we randomly sample some xxhash hash functions and use the one that hashes the most target items to the same value. Run `hash_num_exp.py` on `small_synthetic_dataset.xlsx`.
 
