@@ -87,7 +87,7 @@ Results:
 - Impact of $$\beta$$ on MGA ($$r=10, \epsilon=1$$):
   - OUE:
 
-![G vs beta (Countermeasures against MGA for OUE)](D:\LDP\result\G vs beta (Countermeasures against MGA for OUE).png)
+![G vs beta (Countermeasures against MGA for OUE)]([D:\LDP\result\G vs beta (Countermeasures against MGA for OUE).png](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(Countermeasures%20against%20MGA%20for%20OUE).png))
 
 - Impact of $$r$$​ on MGA ($$\beta=0.05, \epsilon=1$$):
   - OUE:
