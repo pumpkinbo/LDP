@@ -10,7 +10,7 @@ The code implementation includes:
 - Three poisoning attacks on LDP: **Random Item Attack (RIA)**, **Random Perturbed-value Attack (RPA)** and **Maximal Gain Attack (MGA)**.
 - Theoretical analysis: impact of different parameters on the **overall gains** and **normalized overall gains** (measurement of the effectiveness of the attack).
 - Defense mechanisms against poisoning attacks: **normalization**, **fake user detecting** and their combination.
-- Comparison of defenses: impact of **$$\beta$$  (proportion of fake users)** and **$r$ (number of target items)** on the different countermeasures against MGA.
+- Comparison of defenses: impact of **$\beta$  (proportion of fake users)** and **$r$ (number of target items)** on the different countermeasures against MGA.
 - Other experiment: 
   - theoretical and practical overall gains of **RIA for OLH**. 
   - **overall gain vs. number of xxhash** functions sampled in the MGA.
@@ -52,17 +52,15 @@ Results:
 
 ## Theoretical Analysis
 
-![image-20240804100936509](C:\Users\admin\AppData\Roaming\Typora\typora-user-images\image-20240804100936509.png)
-
-According to the above table, files in `theoretical analysis` show the impact of different parameters on the overall gains and normalized overall gains.
+Files in `theoretical analysis` show the impact of different parameters on the overall gains and normalized overall gains.
 
 |  parameters  |         significance         |
 | :----------: | :--------------------------: |
-|  $$\beta$$   |   Proportion of fake users   |
+|  $\beta$   |   Proportion of fake users   |
 |    $r$     |  The number of target items  |
-|   $$f_T$$    | Target items' true frequency |
-| $$\epsilon$$ |        Privacy budget        |
-|    $$d$$     |        Size of domain        |
+|   $f_T$    | Target items' true frequency |
+| $\epsilon$ |        Privacy budget        |
+|    $d$     |        Size of domain        |
 
 Results:
 
@@ -84,19 +82,19 @@ The `fake_detect.py` and `norm.py` in `countermeasures` implement two methods of
 
 Results:
 
-- Impact of $$\beta$$ on MGA ($$r=10, \epsilon=1$$):
+- Impact of $\beta$ on MGA ($r=10, \epsilon=1$):
   - OUE:
 
 ![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(Countermeasures%20against%20MGA%20for%20OUE).png))
 
-- Impact of $$r$$​ on MGA ($$\beta=0.05, \epsilon=1$$):
+- Impact of $r$​ on MGA ($\beta=0.05, \epsilon=1$):
   - OUE:
 
 ![G vs r (countermeasures against MGA for OUE)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20r%20(countermeasures%20against%20MGA%20for%20OUE).png)
 
 ## Others
 
-The theoretical overall gain of RIA for OLH is derived based on the “perfect” hashing assumption, i.e., an item is hashed to a value in the hash domain $$[d']$$ uniformly at random. Practical hash functions may not satisfy this assumption. Therefore, the theoretical overall gain of RIA for OLH may be inaccurate in practice. `other exp/measure_ria_for_olh.py` use xxhash as hash functions to evaluate the gaps between the theoretical and practical overall gains (running on `synthetic_dataset.xlsx`). 
+The theoretical overall gain of RIA for OLH is derived based on the “perfect” hashing assumption, i.e., an item is hashed to a value in the hash domain $[d']$ uniformly at random. Practical hash functions may not satisfy this assumption. Therefore, the theoretical overall gain of RIA for OLH may be inaccurate in practice. `other exp/measure_ria_for_olh.py` use xxhash as hash functions to evaluate the gaps between the theoretical and practical overall gains (running on `synthetic_dataset.xlsx`). 
 
 Result:
 
@@ -106,4 +104,4 @@ The theoretical overall gain of MGA for OLH is derived based on the assumption t
 
 Results:
 
-![G vs number of hash functions（small dataset）](C:\Users\admin\Desktop\G vs number of hash functions（small dataset）.png)
+![G vs number of hash functions（small dataset）](https://github.com/pumpkinbo/LDP/blob/master/other%20exp/G%20vs%20number%20of%20hash%20function.png)
