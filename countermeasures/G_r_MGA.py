@@ -8,6 +8,8 @@ import pandas as pd
 import seaborn as sns
 from norm import Normalization
 from fake_detect import FakeDetect
+from fake_detect_OLH import DetectFakeOLH
+from frequency.olh import OLH
 from attack.mga_v2 import MGA
 from frequency.oue_v2 import OUE
 from both import Both
@@ -18,7 +20,8 @@ yticks = [-10**-1, 0, 10**-1,10**0, 10**1]
 yticklabels=[r'$-10^{-1}$',r'$0$',r'$10^{-1}$',r'$10^{0}$',r'$10^{1}$']
 
 r_vals = [1,2,3,4,5,6,7,8,9,10]
-protocol = OUE(epsilon=1)
+# protocol = OUE(epsilon=1)
+protocol = OLH(epsilon=1)
 nor = Normalization()
 detect = FakeDetect(protocol)
 both = Both(protocol)
@@ -40,8 +43,8 @@ def run_exp_r(file_path):
 
         G_no.append(overall_gain)
         G_norm.append(nor.cal_overall_gain(original_fre_dic, attacked_fre_dic, mga.target_items))
-        G_detect.append(detect.cal_over_gain(perturbed_vals, beta, original_fre_dic, mga.target_items))
-        G_both.append(both.cal_overall_gain(perturbed_vals, original_fre_dic, mga.target_items, beta))
+        G_detect.append(detect.cal_over_gain(perturbed_vals, beta / 10, original_fre_dic, mga.target_items))     # OLH: min_support = b / 10,    OUE: min_support = b    same as "both"
+        G_both.append(both.cal_overall_gain(perturbed_vals, original_fre_dic, mga.target_items, beta / 10))
 
     return G_no, G_norm, G_detect, G_both
 
