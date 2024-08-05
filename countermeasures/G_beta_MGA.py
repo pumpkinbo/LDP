@@ -12,6 +12,8 @@ from fake_detect import FakeDetect
 from both import Both
 from attack.mga_v2 import MGA
 from frequency.oue_v2 import OUE
+from frequency.olh import OLH
+from fake_detect_OLH import DetectFakeOLH
 
 sns.set(style="darkgrid")
 
@@ -20,6 +22,7 @@ yticklabels=[r'$0$',r'$10^{-2}$',r'$10^{-1}$',r'$10^{0}$',r'$10^{1}$']
 
 beta_vals = [1e-3, 5e-3, 1e-2, 5e-2, 1e-1]
 protocol = OUE(epsilon=1)
+# protocol = OLH(epsilon=1)
 nor = Normalization()
 detect = FakeDetect(protocol)
 both = Both(protocol)
