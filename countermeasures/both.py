@@ -7,6 +7,8 @@
 from fake_detect import FakeDetect
 from norm import Normalization
 from frequency.LDPprotocol import LDPProtocol
+from frequency.oue_v2 import OUE
+from frequency.olh import OLH
 
 # fake_users_detect + Normalization
 class Both():
@@ -17,8 +19,17 @@ class Both():
 
     def cal_overall_gain(self, perturbed_values, original_fre, target_items, min_support):
         # detect and remove fake users
-        frequent_itemsets = self.fake_detect.frequent_itemset_mining(perturbed_values, min_support)
-        fake_user_indices = self.fake_detect.detect_fake_users(perturbed_values, frequent_itemsets)
+
+        if isinstance(self.protocol, OLH):
+            binary_vectors = self.fake_detect.craft_binary_vector(perturbed_values)
+            frequent_itemsets = self.fake_detect.frequent_itemset_mining(binary_vectors, min_support)
+            fake_user_indices = self.fake_detect.detect_fake_users(binary_vectors, frequent_itemsets)
+        elif isinstance(self.protocol, OUE):
+            frequent_itemsets = self.fake_detect.frequent_itemset_mining(perturbed_values, min_support)
+            fake_user_indices = self.fake_detect.detect_fake_users(perturbed_values, frequent_itemsets)
+        else:
+            raise ValueError("Unsupported LDP Protocol")
+
         real_perturbed_vals = self.fake_detect.remove_fake_users(perturbed_values, fake_user_indices)
 
         # aggregate the remaining perturbed values
