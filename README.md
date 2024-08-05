@@ -45,8 +45,8 @@ Results:
 |      |  kRR   |  OUE   |  OLH   |
 | :--: | :----: | :----: | :----: |
 | RIA  | 0.0418 | 0.0528 | 0.0599 |
-| RPA  |  6e-5  | 0.4946 |  9e-3  |
-| MGA  | 3.4813 | 1.5761 | 1.0277 |
+| RPA  |  6e-5  | 0.4946 |  6e-4  |
+| MGA  | 3.4813 | 1.5761 | 1.0790 |
 
 
 
@@ -54,8 +54,8 @@ Results:
 
 Files in `theoretical analysis` show the impact of different parameters on the overall gains and normalized overall gains.
 
-|  parameters  |         significance         |
-| :----------: | :--------------------------: |
+| parameters |         significance         |
+| :--------: | :--------------------------: |
 |  $\beta$   |   Proportion of fake users   |
 |    $r$     |  The number of target items  |
 |   $f_T$    | Target items' true frequency |
@@ -66,15 +66,15 @@ Results:
 
 - kRR:
 
-![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20normalized%20G%20of%20kRR.png)
+![G and normalized G of kRR](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20normalized%20G%20of%20kRR.png)
 
 - OUE:
 
-![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OUE.png)
+![G and Normalized G of OUE](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OUE.png)
 
 - OLH:
 
-![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OLH.png)
+![G and Normalized G of OLH](https://github.com/pumpkinbo/LDP/blob/master/result/G%20and%20Normalized%20G%20of%20OLH.png)
 
 ## Defense
 
@@ -82,15 +82,25 @@ The `fake_detect.py` and `norm.py` in `countermeasures` implement two methods of
 
 Results:
 
-- Impact of $\beta$ on MGA ($r=10, \epsilon=1$):
+- Impact of $\beta$ on MGA ($r=10, \epsilon=1$​):
+
   - OUE:
 
-![](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(Countermeasures%20against%20MGA%20for%20OUE).png))
+  ![G vs beta (Countermeasures against MGA for OUE)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(Countermeasures%20against%20MGA%20for%20OUE).png)
+
+  - OLH:
+
+  ![G vs beta (defense against MGA for OLH)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20beta%20(defense%20against%20MGA%20for%20OLH).png)
 
 - Impact of $r$​ on MGA ($\beta=0.05, \epsilon=1$):
+
   - OUE:
 
-![G vs r (countermeasures against MGA for OUE)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20r%20(countermeasures%20against%20MGA%20for%20OUE).png)
+  ![G vs r (countermeasures against MGA for OUE)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20r%20(countermeasures%20against%20MGA%20for%20OUE).png)
+
+  - OLH:
+
+  ![G vs r (defense against MGA for OLH)](https://github.com/pumpkinbo/LDP/blob/master/result/G%20vs%20r%20(defense%20against%20MGA%20for%20OLH).png)
 
 ## Others
 
@@ -104,4 +114,4 @@ The theoretical overall gain of MGA for OLH is derived based on the assumption t
 
 Results:
 
-![G vs number of hash functions（small dataset）](https://github.com/pumpkinbo/LDP/blob/master/other%20exp/G%20vs%20number%20of%20hash%20function.png)
+![G vs number of hash function](https://github.com/pumpkinbo/LDP/blob/master/other%20exp/G%20vs%20number%20of%20hash%20function.png)
