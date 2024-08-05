@@ -23,7 +23,7 @@ from attack.Attack import Attack
 
 
 class MGA(Attack):
-    def __init__(self, protocol : LDPProtocol, r=10, beta=0.05, num_hash_funcs=100):
+    def __init__(self, protocol : LDPProtocol, r=10, beta=0.05, num_hash_funcs=400):
         super().__init__(protocol, r, beta)
         self.num_hash_funcs = num_hash_funcs    # number of sampled hash functions for OLH
 
