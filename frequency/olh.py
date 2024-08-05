@@ -11,7 +11,7 @@ import math
 import xxhash
 from frequency.LDPprotocol import LDPProtocol
 
-SIZE_OF_HASH_FUNCTION = 1000
+SIZE_OF_HASH_FUNCTION = 100
 
 class OLH(LDPProtocol):
     def __init__(self, epsilon = 5):
@@ -25,6 +25,7 @@ class OLH(LDPProtocol):
         # overall probability parameters for OLH
         self.p_ = self.p
         self.q_ = 1 / self.d_dot
+        self.hash_count = SIZE_OF_HASH_FUNCTION
 
     def load_data(self, file_path):
         dataframe = pd.read_excel(file_path)
@@ -36,7 +37,7 @@ class OLH(LDPProtocol):
         return dataframe
 
     def encode(self, raw_item):
-        seed = raw_item
+        seed = random.randint(1,100)
         # hash_func = xxhash.xxh32(seed=seed) # let the seed represent the hash function
         # hash_func.update(str(raw_item))
         hash_val = xxhash.xxh32(str(raw_item), seed=seed).intdigest() % self.d_dot
@@ -79,7 +80,7 @@ if __name__ == "__main__":
     item_frequencies = [(k,v) for k,v in item_frequencies.items()]
 
     df_frequencies = pd.DataFrame(item_frequencies, columns=['Word', 'Frequency Estimation'])
-    output_file_path = r'D:\LDP\result\Frequency estimation of olh for synthetic dataset.xlsx'
+    output_file_path = r'D:\LDP\result\Frequency estimation of olh for synthetic dataset111.xlsx'
     df_frequencies.to_excel(output_file_path, index=False)
 
     print(f"Results written to {output_file_path}")
