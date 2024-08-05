@@ -25,7 +25,7 @@ class RPA(Attack):
         elif isinstance(self.protocol, KRR):
             return random.choice(self.protocol.domain)
         elif isinstance(self.protocol, OLH):
-            random_hash = random.choice(self.protocol.domain)   # randomly select a seed
+            random_hash = random.randint(1, self.protocol.hash_count)   # randomly select a seed
             random_val = random.choice(self.protocol.domain_dot)
             return dict(hash_func=random_hash, hash_val=random_val)
         else:
